@@ -6,5 +6,7 @@ Executive Summary → Facebook’s importance to politicians, political interest
 Project Proposal → 
 
 Use python packages insta-scrape (built on Selenium and for pandas) and facebook-scraper (pandas-friendly) to web-scrape the comments from the five highest engagement posts of the five highest follower count politicians (for both Instagram and Facebook) from both American political parties.
+
 Use a natural language processing model to find the most frequently used terms that get classified in a list as important political issues to find out what the most talked about issues are for each party. 
+
 Use a natural language language processing model to perform a sentiment analysis of a random sample of comments from accounts who are either business or verified to attempt to define how party activists and groups feel about a particular issue.
