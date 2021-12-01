@@ -105,16 +105,14 @@ def relog_launch(igusern, igpw, fbun, fbpw, chrome_driver = chrome_driver):
     browser.find_element(By.XPATH, "//button[@name='login']").click()
     time.sleep(5)
     
-    browser.find_element(By.XPATH, "//button[@name='Not Now']").click() ### figure out why this isnt working 
+    browser.find_element(By.XPATH, "//button[contains(.,'Not Now')]").click() ### figure out why this isnt working 
     session = browser.session_id
-    
     #log into phantom buster
     username_3 = 'jacob@mainstreet.one'
     password_3 = 'Mainstreetone!'
     browser_3 = webdriver.Chrome(chrome_options=options, executable_path = chrome_driver)
     browser_3.get("https://phantombuster.com/5743805120683034/phantoms/7447948318063011/setup/step/connect-to-instagram?returnTo=%2F5743805120683034%2Fphantoms")
     time.sleep(1)
-    
     elem = browser_3.find_element(By.XPATH, "//input[@type='email']" )
     elem_2 = browser_3.find_element(By.XPATH, "//input[@type='password']")
     elem.send_keys(username_3)
