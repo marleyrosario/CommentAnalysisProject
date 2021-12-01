@@ -45,37 +45,35 @@ path_4 = "/Users/marle/Documents/GitHub/mainstreetone_/BQCON/global-cursor-29911
 path = f'/Users/marle/Downloads/{filename}'
 path_2 = f'/Users/marle/Downloads/{filename_2}'
 
-chrome_driver = '/users/marle/Downloads/chromedriver'
+chrome_driver = '/users/marle/Downloads/chromedriver_win32 (1)/chromedriver'
 
-def create_instagram_logins():
-    IG_username = input("what would IG username like to add:")
-    IG_password = input("what would IG password  like to add:")
-    FB_username = input("what would FB username like to add:")
-    FB_password = input("what would FB Password like to add:")
+def create_starter_logins():
     starter_logins = {'Usernames' : ['bluejay948', 'cozy_jay13'],
                     'Passwords' : ['Imtoogood1!', 'TestBestFest1!'],
                     'FB_Usernames' : ['7737241991', 'Test'],
                     'FB_Passwords' : ['Imtoogood1!', 'TestBestFest1!']}
     instagram_logins = starter_logins
-    instagram_logins = pd.DataFrame(instagram_logins)
-    new_row = {'Usernames': IG_username, 'Passwords':IG_password,
-               'FB_Usernames':FB_username, 
-               'FB_Passwords': FB_password}    
-    instagram_logins = instagram_logins.append(new_row, ignore_index = True)        
+    instagram_logins = pd.DataFrame(instagram_logins)  
     return instagram_logins
 
-instagram_logins = create_instagram_logins()
+instagram_logins = create_starter_logins()
 
 def add_instagram_logins(instagram_logins):
-    IG_username = input("what would IG username like to add:")
-    IG_password = input("what would IG password  like to add:")
-    FB_username = input("what would FB username like to add:")
-    FB_password = input("what would FB Password like to add:")
-    new_row = {'Usernames': IG_username, 'Passwords':IG_password,
-               'FB_Usernames':FB_username, 
-               'FB_Passwords': FB_password}
-    instagram_logins = instagram_logins.append(new_row, ignore_index = True)  
+    decision = input("Would you like to add a login to this database - y/n:")
+    if decision == 'y':
+        IG_username = input("what would IG username like to add:")
+        IG_password = input("what would IG password  like to add:")
+        FB_username = input("what would FB username like to add:")
+        FB_password = input("what would FB Password like to add:")
+        new_row = {'Usernames': IG_username, 'Passwords': IG_password,
+                   'FB_Usernames':FB_username, 
+                   'FB_Passwords': FB_password}
+        instagram_logins = instagram_logins.append(new_row, ignore_index = True)
+    else:
+        print("Alright Great")
     return instagram_logins 
+
+instagram_logins = add_instagram_logins(instagram_logins)
 
 def relog_launch(igusern, igpw, fbun, fbpw, chrome_driver = chrome_driver):
     #calls webdriver adds a couple of arguments and points webdriver to a website
@@ -107,14 +105,14 @@ def relog_launch(igusern, igpw, fbun, fbpw, chrome_driver = chrome_driver):
     browser.find_element(By.XPATH, "//button[@name='login']").click()
     time.sleep(5)
     
-    browser.find_element(By.XPATH, "//button[contains(.,'Not Now')]").click()
+    browser.find_element(By.XPATH, "//button[@name='Not Now']").click() ### figure out why this isnt working 
     session = browser.session_id
     
     #log into phantom buster
     username_3 = 'jacob@mainstreet.one'
     password_3 = 'Mainstreetone!'
     browser_3 = webdriver.Chrome(chrome_options=options, executable_path = chrome_driver)
-    browser_3.get("https://phantombuster.com/5743805120683034/phantoms/5148095275855287/setup/step/connect-to-instagram?returnTo=%2F5743805120683034%2Fphantoms")
+    browser_3.get("https://phantombuster.com/5743805120683034/phantoms/7447948318063011/setup/step/connect-to-instagram?returnTo=%2F5743805120683034%2Fphantoms")
     time.sleep(1)
     
     elem = browser_3.find_element(By.XPATH, "//input[@type='email']" )
@@ -140,13 +138,13 @@ def relog_launch(igusern, igpw, fbun, fbpw, chrome_driver = chrome_driver):
     elem_6 = browser_3.find_element(By.XPATH, "//input[@type='url']")    
     elem_6.send_keys(Keys.COMMAND + 'a')
     elem_6.send_keys(Keys.DELETE)
-    elem_6.send_keys('https://docs.google.com/spreadsheets/d/1TmWrrmaInMfdUAWZVvUh9NEMztP_HsXVgksTUqBvYn4/edit#gid=0')
+    elem_6.send_keys('https://docs.google.com/spreadsheets/d/18xnLXUeQWtUSo-5v_WgjfDBojhs06uGnS9LayxedYi4/edit#gid=0')
     time.sleep(2)    
     
     elem_7 = browser_3.find_element(By.XPATH, "//input[@type='text']")
     elem_7.send_keys(Keys.COMMAND + 'a')
     elem_7.send_keys(Keys.DELETE)
-    elem_7.send_keys('posts')
+    elem_7.send_keys('comments')
     time.sleep(2)
    
     browser_3.find_element(By.XPATH,"//button[@type='submit']").click()
@@ -155,7 +153,7 @@ def relog_launch(igusern, igpw, fbun, fbpw, chrome_driver = chrome_driver):
     elem_8 = browser_3.find_element(By.XPATH, "//input[@type='number']")
     elem_8.send_keys(Keys.COMMAND + 'a')
     elem_8.send_keys(Keys.DELETE)
-    elem_8.send_keys('')
+    elem_8.send_keys('20')
     time.sleep(2)
     
     elem_9 = browser_3.find_element(By.XPATH, "//input[@type='text']")
@@ -170,7 +168,7 @@ def relog_launch(igusern, igpw, fbun, fbpw, chrome_driver = chrome_driver):
     time.sleep(3)
     
     #go to the agent console url and launch phantom
-    browser_3.get('https://phantombuster.com/5743805120683034/phantoms/5148095275855287/console')
+    browser_3.get('https://phantombuster.com/5743805120683034/phantoms/7447948318063011/console')
     time.sleep(2)
     launch = browser_3.find_element(By.XPATH, "//button[@analyticsid='agentLaunchBtn']")
     time.sleep(2)
