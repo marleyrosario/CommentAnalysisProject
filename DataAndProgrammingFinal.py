@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+Created on Thu Dec  2 17:02:33 2021
+
+@author: marle
+"""
+
+# -*- coding: utf-8 -*-
+"""
 Created on Fri Nov 26 15:42:05 2021
 
 @author: marle
@@ -103,7 +110,7 @@ def relog_launch(igusern, igpw, fbun, fbpw, chrome_driver = chrome_driver):
     browser.find_element(By.XPATH, "//input[@name='email']").send_keys(us)
     browser.find_element(By.XPATH, "//input[@name='pass']").send_keys(pw)
     browser.find_element(By.XPATH, "//button[@name='login']").click()
-    time.sleep(5)
+    time.sleep(30)
     
     browser.find_element(By.XPATH, "//button[contains(.,'Not Now')]").click() ### figure out why this isnt working 
     session = browser.session_id
@@ -120,11 +127,12 @@ def relog_launch(igusern, igpw, fbun, fbpw, chrome_driver = chrome_driver):
     time.sleep(2)
     
     browser_3.find_element(By.XPATH, "//button[contains(.,'Log in')]").click()
+    browser_3.maximize_window()
     time.sleep(2)
     
     #Set up phantom with the session cookie from above ^
     elem_3 = browser_3.find_element(By.XPATH, "//input[@type='text']")
-    elem_3.send_keys(Keys.COMMAND + 'a')
+    elem_3.send_keys(Keys.CONTROL + 'a')
     elem_3.send_keys(Keys.DELETE)
     elem_3.send_keys(session)
     time.sleep(2)
@@ -134,35 +142,42 @@ def relog_launch(igusern, igpw, fbun, fbpw, chrome_driver = chrome_driver):
     time.sleep(2)
     
     elem_6 = browser_3.find_element(By.XPATH, "//input[@type='url']")    
-    elem_6.send_keys(Keys.COMMAND + 'a')
+    elem_6.send_keys(Keys.CONTROL + 'a')
     elem_6.send_keys(Keys.DELETE)
     elem_6.send_keys('https://docs.google.com/spreadsheets/d/18xnLXUeQWtUSo-5v_WgjfDBojhs06uGnS9LayxedYi4/edit#gid=0')
     time.sleep(2)    
     
     elem_7 = browser_3.find_element(By.XPATH, "//input[@type='text']")
-    elem_7.send_keys(Keys.COMMAND + 'a')
+    elem_7.send_keys(Keys.CONTROL + 'a')
     elem_7.send_keys(Keys.DELETE)
     elem_7.send_keys('comments')
+    elem_7.send_keys(Keys.PAGE_DOWN)
     time.sleep(2)
    
     browser_3.find_element(By.XPATH,"//button[@type='submit']").click()
     time.sleep(2)
     
     elem_8 = browser_3.find_element(By.XPATH, "//input[@type='number']")
-    elem_8.send_keys(Keys.COMMAND + 'a')
+    elem_8.send_keys(Keys.CONTROL + 'a')
     elem_8.send_keys(Keys.DELETE)
     elem_8.send_keys('20')
     time.sleep(2)
     
     elem_9 = browser_3.find_element(By.XPATH, "//input[@type='text']")
-    elem_9.send_keys(Keys.COMMAND + 'a')
+    elem_9.send_keys(Keys.CONTROL + 'a')
     elem_9.send_keys(Keys.DELETE)
     elem_9.send_keys('jacob_is_the_best')
     time.sleep(1)
     
-    browser_3.find_element(By.XPATH,"//button[@type='submit']").click()
+    elem_10 = browser_3.find_element(By.XPATH,"//button[@type='submit']")
+    elem_10.send_keys(Keys.PAGE_DOWN)
+    
+    elem_10.click()
+    browser_3.maximize_window()
     time.sleep(1)
-    browser_3.find_element(By.XPATH,"//button[@type='submit']").click()
+    elem_11 = browser_3.find_element(By.XPATH,"//button[@type='submit']")
+    elem_11.send_keys(Keys.PAGE_DOWN)
+    elem_11.click()
     time.sleep(3)
     
     #go to the agent console url and launch phantom
@@ -197,8 +212,9 @@ def get_output(agent_id):
     link = re.findall(r'(https?://phantom[^\s]+)', ls)
     #create a list of the text that starts with Session cookie not valid  anymore.
     check = re.findall(r'(Instagram rate limit reached, you should try again in 15min[^\s]+)', ls)
+    couldnt_access = re.findall(r"(Couldn't access input spreadsheet[^\s]+)", ls)
     #if the length of the list is anything other than 0 than it has been rate limited
-    if len(check) != 0:
+    if len(check) != 0 or len(couldnt_access)!=0:
         #If rate limited then we need to login to instagram and run the phantom in the same browser we logged into instagram
         for i in range(len(instagram_logins)):
             x = relog_launch(igusern= instagram_logins['Usernames'][i], igpw= instagram_logins['Passwords'][i], fbun=instagram_logins['FB_Usernames'][i], fbpw= instagram_logins['FB_Passwords'][i])
@@ -207,6 +223,8 @@ def get_output(agent_id):
             
     else:        
         i = webbrowser.open(link[0])
+        
+        
     
     return check, link, i
 
