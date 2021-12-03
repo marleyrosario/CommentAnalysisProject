@@ -213,8 +213,9 @@ def get_output(agent_id):
     #create a list of the text that starts with Session cookie not valid  anymore.
     check = re.findall(r'(Instagram rate limit reached, you should try again in 15min[^\s]+)', ls)
     couldnt_access = re.findall(r"(Couldn't access input spreadsheet[^\s]+)", ls)
+    column_name = re.findall(r"(Incorrect spreadsheet's column name[^\s]+)", ls)    
     #if the length of the list is anything other than 0 than it has been rate limited
-    if len(check) != 0 or len(couldnt_access)!=0:
+    if len(check) != 0 or len(couldnt_access)!=0 or len(column_name) != 0:
         #If rate limited then we need to login to instagram and run the phantom in the same browser we logged into instagram
         for i in range(len(instagram_logins)):
             x = relog_launch(igusern= instagram_logins['Usernames'][i], igpw= instagram_logins['Passwords'][i], fbun=instagram_logins['FB_Usernames'][i], fbpw= instagram_logins['FB_Passwords'][i])
