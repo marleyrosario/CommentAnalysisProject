@@ -66,6 +66,8 @@ def find_politicians_ig_handles(name_of_politician):
     #browsers = [browser.get(ig_of_politician) for ig_of_politician in ig_of_politicians]
     time.sleep(15)
     followers = browser.find_elements_by_class_name("g47SY")
+    time.sleep(10)
+    current_url = browser.current_url
     followers = followers[1].text
     def convert_str_to_number(x):
         total_stars = 0
@@ -79,4 +81,15 @@ def find_politicians_ig_handles(name_of_politician):
     
 
     followers = convert_str_to_number(followers)
-    return followers
+    
+    df = pd.DataFrame({'URL':current_url, 'Followers':followers})
+    time.sleep(20)
+    browser.close()
+    return df
+
+
+
+
+
+
+
