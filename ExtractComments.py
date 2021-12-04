@@ -114,53 +114,42 @@ def relog_launch(igusern, igpw, fbun, fbpw, chrome_driver = chrome_driver):
     elem.send_keys(username_3)
     elem_2.send_keys(password_3)
     time.sleep(2)
-    
     browser_3.find_element(By.XPATH, "//button[contains(.,'Log in')]").click()
     browser_3.maximize_window()
     time.sleep(2)
-    
     #Set up phantom with the session cookie from above ^
     elem_3 = browser_3.find_element(By.XPATH, "//input[@type='text']")
     elem_3.send_keys(Keys.CONTROL + 'a')
     elem_3.send_keys(Keys.DELETE)
     elem_3.send_keys(session)
     time.sleep(2)
-
-    
     browser_3.find_element(By.XPATH, "//button[@type='submit']").click()
     time.sleep(2)
-    
     elem_6 = browser_3.find_element(By.XPATH, "//input[@type='url']")    
     elem_6.send_keys(Keys.CONTROL + 'a')
     elem_6.send_keys(Keys.DELETE)
     elem_6.send_keys('https://docs.google.com/spreadsheets/d/18xnLXUeQWtUSo-5v_WgjfDBojhs06uGnS9LayxedYi4/edit#gid=0')
     time.sleep(2)    
-    
     elem_7 = browser_3.find_element(By.XPATH, "//input[@type='text']")
     elem_7.send_keys(Keys.CONTROL + 'a')
     elem_7.send_keys(Keys.DELETE)
     elem_7.send_keys('comments')
     elem_7.send_keys(Keys.PAGE_DOWN)
     time.sleep(2)
-   
     browser_3.find_element(By.XPATH,"//button[@type='submit']").click()
     time.sleep(2)
-    
     elem_8 = browser_3.find_element(By.XPATH, "//input[@type='number']")
     elem_8.send_keys(Keys.CONTROL + 'a')
     elem_8.send_keys(Keys.DELETE)
     elem_8.send_keys('20')
     time.sleep(2)
-    
     elem_9 = browser_3.find_element(By.XPATH, "//input[@type='text']")
     elem_9.send_keys(Keys.CONTROL + 'a')
     elem_9.send_keys(Keys.DELETE)
     elem_9.send_keys('jacob_is_the_best')
     time.sleep(1)
-    
     elem_10 = browser_3.find_element(By.XPATH,"//button[@type='submit']")
     elem_10.send_keys(Keys.PAGE_DOWN)
-    
     elem_10.click()
     browser_3.maximize_window()
     time.sleep(1)
@@ -168,14 +157,12 @@ def relog_launch(igusern, igpw, fbun, fbpw, chrome_driver = chrome_driver):
     elem_11.send_keys(Keys.PAGE_DOWN)
     elem_11.click()
     time.sleep(3)
-    
     #go to the agent console url and launch phantom
     browser_3.get('https://phantombuster.com/5743805120683034/phantoms/7447948318063011/console')
     time.sleep(2)
     launch = browser_3.find_element(By.XPATH, "//button[@analyticsid='agentLaunchBtn']")
     time.sleep(2)
     launch.click()
-    
     #return the session cookie that we grabbed
     return session
 
@@ -209,13 +196,9 @@ def get_output(agent_id):
         for i in range(len(instagram_logins)):
             x = relog_launch(igusern= instagram_logins['Usernames'][i], igpw= instagram_logins['Passwords'][i], fbun=instagram_logins['FB_Usernames'][i], fbpw= instagram_logins['FB_Passwords'][i])
             time.sleep(480)
-            check, link, i = get_output(agent_id)
-            
+            check, link, i = get_output(agent_id)     
     else:        
-        i = webbrowser.open(link[0])
-        
-        
-    
+        i = webbrowser.open(link[0]) 
     return check, link, i
 
 check, link, i = get_output('7447948318063011')
