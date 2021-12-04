@@ -60,7 +60,7 @@ def find_politicians_ig_handles(name_of_politician):
     
     account = browser.find_element_by_xpath('//*[@id="react-root"]/section/nav/div[2]/div/div/div[2]/input')
     time.sleep(20)
-    account.send_keys(name_of_politician)
+    account.send_keys('howarddean')
     time.sleep(10)
     browser.find_element_by_xpath('//*[@id="react-root"]/section/nav/div[2]/div/div/div[2]/div[3]/div/div[2]/div/div[1]/a/div').click()
     #browsers = [browser.get(ig_of_politician) for ig_of_politician in ig_of_politicians]
@@ -69,6 +69,11 @@ def find_politicians_ig_handles(name_of_politician):
     time.sleep(10)
     current_url = browser.current_url
     followers = followers[1].text
+    def convert_thousands_to_number(x):
+        import re
+        x = x.replace(',', '')
+        x = int(x)
+        return x
     def convert_str_to_number(x):
         total_stars = 0
         num_map = {'K':1000, 'M':1000000, 'B':1000000000}
@@ -79,17 +84,34 @@ def find_politicians_ig_handles(name_of_politician):
                 total_stars = float(x[:-1]) * num_map.get(x[-1].upper(), 1)
         return int(total_stars)
     
-
-    followers = convert_str_to_number(followers)
+    if "," in followers:
+        followers = convert_thousands_to_number(followers)
+    else:
+        followers = convert_str_to_number(followers)
     
-    df = pd.DataFrame({'URL':current_url, 'Followers':followers})
-    time.sleep(20)
+    df = pd.DataFrame({'URL':current_url, 'Followers':followers}, index=[0])
+    time.sleep(100)
     browser.close()
+    time.sleep(200)
     return df
 
 
+def build_csv(dems, republicans):
+    dems = find_list_of_politicians(dems)
+    republicans = find_list_of_politicians(republicans)
+    
+    list_of_dem_igs = [find_politicians_ig_handles(dem) for dem in dems]
+    list_of_republican_igs = [find_politicians_ig_handles(republican) for republican in republicans]
+    
+    dems = pd.concat(list_of_dem_igs)
+    republicans = pd.concat(list_of_republican_igs)
+    
+    top_5_dems = dems.nlargest(5, 'Followers')
+    top_5_republicans = republicans.nlargest(5, 'Followers')
+    
+    total_list = pd.concat([top_5_dems, top_5_republicans])
+    return total_list
 
+total_list = build_csv(dems = dems, republicans = republicans)
 
-
-
-
+total_list.to_csv('C:/Users/marle/Documents/Github/CommentAnalysisProject/total_list.csv')
