@@ -41,17 +41,6 @@ import numpy as np
 
 current_date = datetime.datetime.now()
 
-#create a filename with the date of the current day this is how the program knows which files to grab when running
-filename = 'comment_data_' + current_date.strftime("%m") + '_' + current_date.strftime("%d") + '_' + current_date.strftime("%Y"+ '.csv') #current_date.strftime("%d")
-filename_2 = 'post_data_' + current_date.strftime("%m") + '_' + current_date.strftime("%d") + '_' + current_date.strftime("%Y" + '.csv')
-post_file_name = 'post_data_' + current_date.strftime("%m") + '_' + current_date.strftime("%d") + '_' + current_date.strftime("%Y")
-comment_file_name = 'comment_data_' + current_date.strftime("%m") + '_' + current_date.strftime("%d") + '_' + current_date.strftime("%Y")
-
-path_3 = "/Users/marle/Documents/GitHub/mainstreetone_/BQCON/global-cursor-299117-4afbf4e83f5a.json"
-path_4 = "/Users/marle/Documents/GitHub/mainstreetone_/BQCON/global-cursor-299117-1ec8eb78ea50.json"
-path = f'/Users/marle/Downloads/{filename}'
-path_2 = f'/Users/marle/Downloads/{filename_2}'
-
 chrome_driver = '/users/marle/Downloads/chromedriver_win32 (1)/chromedriver'
 
 def create_starter_logins():

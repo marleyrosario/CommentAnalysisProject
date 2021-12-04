@@ -5,15 +5,15 @@ Created on Fri Dec  3 18:16:41 2021
 @author: marle
 """
 import pandas as pd
-import requests
-from bs4 import BeautifulSoup
-import re
+
 dems = "https://stacker.com/stories/4225/50-most-popular-democratic-politicians-today"
 republicans = 'https://stacker.com/stories/4221/50-most-popular-republican-politicians-today'
 chrome_driver = '/users/marle/Downloads/chromedriver_win32 (1)/chromedriver'
 
-
 def find_list_of_politicians(party):
+    import requests
+    from bs4 import BeautifulSoup
+    import re
     page = requests.get(party)
     soup = BeautifulSoup(page.content, "html.parser")
     results = soup.find(id="block-stacker-content")
@@ -26,7 +26,7 @@ def find_list_of_politicians(party):
     names_of_politicians = names_of_politicians[1:51]
     return names_of_politicians
 
-def find_politicians_ig_handles():
+def find_politicians_ig_handles(name_of_politician):
     username_2 = 'bluejay948'
     password_2 = 'Imtoogood1'
     us = '7737241991'
@@ -60,7 +60,7 @@ def find_politicians_ig_handles():
     
     account = browser.find_element_by_xpath('//*[@id="react-root"]/section/nav/div[2]/div/div/div[2]/input')
     time.sleep(20)
-    account.send_keys('gavinnewsom')
+    account.send_keys(name_of_politician)
     time.sleep(10)
     browser.find_element_by_xpath('//*[@id="react-root"]/section/nav/div[2]/div/div/div[2]/div[3]/div/div[2]/div/div[1]/a/div').click()
     #browsers = [browser.get(ig_of_politician) for ig_of_politician in ig_of_politicians]
