@@ -14,7 +14,7 @@ variable and the name of the files in the list.
 import pandas as pd
 files = ['barackobama.csv', 
          "aoc.csv",
-         "hillaryclinton.csv",
+         "berniesanders.csv",
          "joebiden.csv",
          "kamalaharris.csv",
          "mikepence.csv",
@@ -38,7 +38,7 @@ def build_csv(files, path):
     dfs = [df.nlargest(5, 'Total_Engagement') for df in dfs]
     csv = pd.concat(dfs)
     csv = csv.reset_index(drop=False)
-    csv = csv[['postUrl', 'index']]
+    csv = csv[['postUrl', 'index', 'Total_Engagement', 'commentCount']]
     return csv
 
 csv = build_csv(files = files, path = path)
