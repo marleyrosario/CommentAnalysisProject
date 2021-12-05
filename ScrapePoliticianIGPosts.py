@@ -5,10 +5,8 @@ Created on Sat Dec  4 17:35:09 2021
 @author: marle
 """
 import pandas as pd
-
 politicians = pd.read_csv('C:/Users/marle/Documents/Github/CommentAnalysisProject/total_list.csv')
 chrome_driver = '/users/marle/Downloads/chromedriver_win32 (1)/chromedriver'
-
 
 def get_posts(url, agent_id):
     username_2 = 'bluejay948'
