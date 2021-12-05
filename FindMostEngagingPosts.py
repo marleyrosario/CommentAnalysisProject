@@ -9,7 +9,6 @@ import pandas as pd
 politicians = pd.read_csv('C:/Users/marle/Documents/Github/CommentAnalysisProject/total_list.csv')
 chrome_driver = '/users/marle/Downloads/chromedriver_win32 (1)/chromedriver'
 
-urls = politicians['URL'].tolist()
 
 def get_posts(url, agent_id):
     username_2 = 'bluejay948'
@@ -108,7 +107,17 @@ def get_posts(url, agent_id):
     link = re.findall(r'(https?://phantom[^\s]+)', ls)
     import webbrowser
     df = webbrowser.open(link[0]) 
+    time.sleep(30)
+    browser.close()
     return df
 
-df = [get_posts(url, '6637118561671508') for url in urls]
+def start_scraping():
+    question = input("Do you want to start scraping? - Y/N:")
+    if "Y" in question:
+        urls = politicians['URL'].tolist()
+        df = [get_posts(url, '6637118561671508') for url in urls]
+    else:
+        print("Alright. This script is done.")
+
+start_scraping()
 
