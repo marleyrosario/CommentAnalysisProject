@@ -10,6 +10,8 @@ import time
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from fake_useragent import UserAgent
+
 
 dems = "https://stacker.com/stories/4225/50-most-popular-democratic-politicians-today"
 republicans = 'https://stacker.com/stories/4221/50-most-popular-republican-politicians-today'
@@ -37,8 +39,11 @@ def relog_into_instagram():
     us = '7737241991'
     pw = 'Imtoogood1!'
     options = webdriver.ChromeOptions()
+    ua = UserAgent()
+    userAgent = ua.random
     options.add_experimental_option("detach", True)
     options.add_argument("--incognito")
+    options.add_argument(f'user-agent={userAgent}')
     browser = webdriver.Chrome(chrome_options=options, executable_path=chrome_driver)
     browser.get('https://www.instagram.com/')
     browser.maximize_window()
@@ -90,7 +95,7 @@ def grab_data(browser, name_of_politician):
 
     df = pd.DataFrame({'URL':current_url, 'Followers':followers}, index=[0])
     time.sleep(100)
-    browser.close()
+    browser.quit()
     return df
     
 def find_politicians_ig_handles(name_of_politician):
@@ -98,16 +103,18 @@ def find_politicians_ig_handles(name_of_politician):
     time.sleep(30)
     time.sleep(2.5)
     elem = browser.find_element(By.XPATH, "//button[contains(.,'Not Now')]")
-    if len(elem) > 0:
+    if len(elem.text) > 0:
+        elem.click()
         df = grab_data(browser, name_of_politician)
         time.sleep(100)
-        browser.close()
+        browser.quit()
         time.sleep(200)
     else:
         time.sleep(900)
+        browser.quit()
         relog_into_instagram()
         df = grab_data(browser, name_of_politician)
-        browser.close()
+        browser.quit()
     return df
 
 
@@ -122,7 +129,7 @@ def build_csv(dems, republicans):
             try:
                 list_of_dem_igs.append(find_politicians_ig_handles(dem))
             except NoSuchElementException:  #spelling error making this code not work as expected
-                time.sleep(500)    
+                time.sleep(10)    
                 continue
         break
     for republican in republicans:

@@ -112,7 +112,8 @@ def get_posts(url, agent_id):
 def start_scraping():
     question = input("Do you want to start scraping? - Y/N:")
     if "Y" in question:
-        urls = politicians['URL'].tolist()
+        #urls = politicians['URL'].tolist()
+        urls = []
         df = [get_posts(url, '6637118561671508') for url in urls]
     else:
         print("Alright. This script is done.")
