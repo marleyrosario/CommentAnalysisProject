@@ -5,6 +5,11 @@ Created on Fri Dec  3 18:16:41 2021
 @author: marle
 """
 import pandas as pd
+from selenium import webdriver
+import time
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 
 dems = "https://stacker.com/stories/4225/50-most-popular-democratic-politicians-today"
 republicans = 'https://stacker.com/stories/4221/50-most-popular-republican-politicians-today'
@@ -26,16 +31,11 @@ def find_list_of_politicians(party):
     names_of_politicians = names_of_politicians[1:51]
     return names_of_politicians
 
-def find_politicians_ig_handles(name_of_politician):
+def relog_into_instagram():
     username_2 = 'bluejay948'
     password_2 = 'Imtoogood1'
     us = '7737241991'
     pw = 'Imtoogood1!'
-    from selenium import webdriver
-    import time
-    from selenium.webdriver.common.keys import Keys
-    from selenium.webdriver.common.by import By
-    from selenium.webdriver.chrome.options import Options
     options = webdriver.ChromeOptions()
     options.add_experimental_option("detach", True)
     options.add_argument("--incognito")
@@ -54,13 +54,12 @@ def find_politicians_ig_handles(name_of_politician):
     browser.find_element(By.XPATH, "//input[@name='email']").send_keys(us)
     browser.find_element(By.XPATH, "//input[@name='pass']").send_keys(pw)
     browser.find_element(By.XPATH, "//button[@name='login']").click()
-    time.sleep(30)
-    time.sleep(2.5)
-    browser.find_element(By.XPATH, "//button[contains(.,'Not Now')]").click()
-    
+    return browser
+
+def grab_data(browser, name_of_politician):
     account = browser.find_element_by_xpath('//*[@id="react-root"]/section/nav/div[2]/div/div/div[2]/input')
     time.sleep(20)
-    account.send_keys('howarddean')
+    account.send_keys(name_of_politician)
     time.sleep(10)
     browser.find_element_by_xpath('//*[@id="react-root"]/section/nav/div[2]/div/div/div[2]/div[3]/div/div[2]/div/div[1]/a/div').click()
     #browsers = [browser.get(ig_of_politician) for ig_of_politician in ig_of_politicians]
@@ -88,21 +87,52 @@ def find_politicians_ig_handles(name_of_politician):
         followers = convert_thousands_to_number(followers)
     else:
         followers = convert_str_to_number(followers)
-    
+
     df = pd.DataFrame({'URL':current_url, 'Followers':followers}, index=[0])
     time.sleep(100)
     browser.close()
-    time.sleep(200)
+    return df
+    
+def find_politicians_ig_handles(name_of_politician):
+    browser = relog_into_instagram()
+    time.sleep(30)
+    time.sleep(2.5)
+    elem = browser.find_element(By.XPATH, "//button[contains(.,'Not Now')]")
+    if len(elem) > 0:
+        df = grab_data(browser, name_of_politician)
+        time.sleep(100)
+        browser.close()
+        time.sleep(200)
+    else:
+        time.sleep(900)
+        relog_into_instagram()
+        df = grab_data(browser, name_of_politician)
+        browser.close()
     return df
 
 
 def build_csv(dems, republicans):
     dems = find_list_of_politicians(dems)
     republicans = find_list_of_politicians(republicans)
-    
-    list_of_dem_igs = [find_politicians_ig_handles(dem) for dem in dems]
-    list_of_republican_igs = [find_politicians_ig_handles(republican) for republican in republicans]
-    
+    from selenium.common.exceptions import NoSuchElementException
+    list_of_dem_igs=[]
+    list_of_republican_igs=[]
+    for dem in dems:
+        while True:
+            try:
+                list_of_dem_igs.append(find_politicians_ig_handles(dem))
+            except NoSuchElementException:  #spelling error making this code not work as expected
+                time.sleep(500)    
+                continue
+        break
+    for republican in republicans:
+        while True:
+            try:
+                list_of_republican_igs.append(find_politicians_ig_handles(republican))
+            except NoSuchElementException:  #spelling error making this code not work as expected
+                time.sleep(500)    
+                continue
+        break
     dems = pd.concat(list_of_dem_igs)
     republicans = pd.concat(list_of_republican_igs)
     
@@ -113,5 +143,4 @@ def build_csv(dems, republicans):
     return total_list
 
 total_list = build_csv(dems = dems, republicans = republicans)
-
 total_list.to_csv('C:/Users/marle/Documents/Github/CommentAnalysisProject/total_list.csv')

@@ -71,7 +71,7 @@ def add_instagram_logins(instagram_logins):
 
 instagram_logins = add_instagram_logins(instagram_logins)
 
-def relog_launch(igusern, igpw, fbun, fbpw, chrome_driver = chrome_driver):
+def relog_launch(ig_post, igusern, igpw, fbun, fbpw, chrome_driver = chrome_driver):
     #calls webdriver adds a couple of arguments and points webdriver to a website
     options = webdriver.ChromeOptions()
     options.add_experimental_option("detach", True)
@@ -128,25 +128,17 @@ def relog_launch(igusern, igpw, fbun, fbpw, chrome_driver = chrome_driver):
     elem_6 = browser_3.find_element(By.XPATH, "//input[@type='url']")    
     elem_6.send_keys(Keys.CONTROL + 'a')
     elem_6.send_keys(Keys.DELETE)
-    elem_6.send_keys('https://docs.google.com/spreadsheets/d/18xnLXUeQWtUSo-5v_WgjfDBojhs06uGnS9LayxedYi4/edit#gid=0')
+    elem_6.send_keys(ig_post)
     time.sleep(2)    
-    elem_7 = browser_3.find_element(By.XPATH, "//input[@type='text']")
-    elem_7.send_keys(Keys.CONTROL + 'a')
-    elem_7.send_keys(Keys.DELETE)
-    elem_7.send_keys('comments')
-    elem_7.send_keys(Keys.PAGE_DOWN)
+    elem_6.send_keys(Keys.PAGE_DOWN)
     time.sleep(2)
     browser_3.find_element(By.XPATH,"//button[@type='submit']").click()
     time.sleep(2)
-    elem_8 = browser_3.find_element(By.XPATH, "//input[@type='number']")
-    elem_8.send_keys(Keys.CONTROL + 'a')
-    elem_8.send_keys(Keys.DELETE)
-    elem_8.send_keys('20')
     time.sleep(2)
     elem_9 = browser_3.find_element(By.XPATH, "//input[@type='text']")
     elem_9.send_keys(Keys.CONTROL + 'a')
     elem_9.send_keys(Keys.DELETE)
-    elem_9.send_keys('jacob_is_the_best')
+    elem_9.send_keys(ig_post)
     time.sleep(1)
     elem_10 = browser_3.find_element(By.XPATH,"//button[@type='submit']")
     elem_10.send_keys(Keys.PAGE_DOWN)
@@ -163,27 +155,32 @@ def relog_launch(igusern, igpw, fbun, fbpw, chrome_driver = chrome_driver):
     launch = browser_3.find_element(By.XPATH, "//button[@analyticsid='agentLaunchBtn']")
     time.sleep(2)
     launch.click()
+    browser.close()
     #return the session cookie that we grabbed
     return session
 
 
-def phantom_launch(agent_id):
-    url = f"https://api.phantombuster.com/api/v1/agent/{agent_id}/launch"
-    headers = {"Accept": "application/json","X-Phantombuster-Key-1": "d6wcAtnXbjU3f3akZYFgueSzLi1cDMKvDansjY5AsiA"}
-    response = requests.request("POST", url, headers=headers)
-    print(response.text)
-    
-    #Get the output of the phantom given a phantom id
-def get_output(agent_id):
-    #Variables set to create an api call
-    url = "https://api.phantombuster.com/api/v2/agents/fetch-output"
-    querystring = {"id":f'{agent_id}', "mode":"most-recent"}
-    headers = {"Accept": "application/json", 'x-phantombuster-key': "d6wcAtnXbjU3f3akZYFgueSzLi1cDMKvDansjY5AsiA"}
-    response = requests.request("GET", url, headers=headers, params=querystring)
-    #turn response to json (dictionary in python)
-    df = response.json()
-    #Grab the output value and create a string variable of all the text from the output of a phantom
+#def phantom_launch(agent_id):
+url = "https://api.phantombuster.com/api/v1/agent/7447948318063011/launch"
+headers = {"Accept": "application/json","X-Phantombuster-Key-1": "d6wcAtnXbjU3f3akZYFgueSzLi1cDMKvDansjY5AsiA"}
+response = requests.request("POST", url, headers=headers)
+print(response.text)
+
+#Get the output of the phantom given a phantom id
+#def get_output(agent_id, ig_post):
+#Variables set to create an api call
+url = "https://api.phantombuster.com/api/v2/agents/fetch-output"
+querystring = {"id":'7447948318063011', "mode":"most-recent"}
+time.sleep(25)
+headers = {"Accept": "application/json", 'x-phantombuster-key': "d6wcAtnXbjU3f3akZYFgueSzLi1cDMKvDansjY5AsiA"}
+response = requests.request("GET", url, headers=headers, params=querystring)
+#turn response to json (dictionary in python)
+df = response.json()
+#Grab the output value and create a string variable of all the text from the output of a phantom
+if df['isAgentRunning'] is True:
     ls = df["output"]
+    #create a list grabbing the text that starts with https?://phantom (In an output of the phantom it is structured with 2 urls 1 being the csv file 2 being the json file) list index 0 will always be the csv unless the phantom was rate limited
+    link = re.findall(r'(https?://phantom[^\s]+)', ls)
     #create a list grabbing the text that starts with https?://phantom (In an output of the phantom it is structured with 2 urls 1 being the csv file 2 being the json file) list index 0 will always be the csv unless the phantom was rate limited
     link = re.findall(r'(https?://phantom[^\s]+)', ls)
     #create a list of the text that starts with Session cookie not valid  anymore.
@@ -191,14 +188,20 @@ def get_output(agent_id):
     couldnt_access = re.findall(r"(Couldn't access input spreadsheet[^\s]+)", ls)
     column_name = re.findall(r"(Incorrect spreadsheet's column name[^\s]+)", ls)    
     #if the length of the list is anything other than 0 than it has been rate limited
-    if len(check) != 0 or len(couldnt_access)!=0 or len(column_name) != 0:
+    if len(check) != 0 or len(couldnt_access)!=0 or len(column_name) !=0:
         #If rate limited then we need to login to instagram and run the phantom in the same browser we logged into instagram
         for i in range(len(instagram_logins)):
-            x = relog_launch(igusern= instagram_logins['Usernames'][i], igpw= instagram_logins['Passwords'][i], fbun=instagram_logins['FB_Usernames'][i], fbpw= instagram_logins['FB_Passwords'][i])
+            x = relog_launch("https://www.instagram.com/p/B7bHRPbgjWc/", igusern= instagram_logins['Usernames'][i], 
+                             igpw= instagram_logins['Passwords'][i], 
+                             fbun=instagram_logins['FB_Usernames'][i], 
+                             fbpw= instagram_logins['FB_Passwords'][i])
             time.sleep(480)
-            check, link, i = get_output(agent_id)     
+            #check, link, i = get_output(agent_id)     
     else:        
-        i = webbrowser.open(link[0]) 
-    return check, link, i
-
-check, link, i = get_output('7447948318063011')
+        i = webbrowser.open(link[0])
+else:
+    time.sleep(500)
+#return i
+#i = get_output("https://www.instagram.com/p/B7bHRPbgjWc/", '7447948318063011')
+ig_posts = pd.read_csv(r"C:\Users\marle\Documents\Github\CommentAnalysisProject\poststoscrape.csv")
+#comments = [get_output(ig_post, '7447948318063011') for ig_post in ig_posts]
