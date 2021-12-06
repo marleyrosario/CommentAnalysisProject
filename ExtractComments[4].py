@@ -38,6 +38,7 @@ from google.cloud import bigquery_storage
 import datetime
 from datetime import date
 import numpy as np
+from fake_useragent import UserAgent
 
 current_date = datetime.datetime.now()
 
@@ -74,8 +75,11 @@ instagram_logins = add_instagram_logins(instagram_logins)
 def relog_launch(ig_post, igusern, igpw, fbun, fbpw, chrome_driver = chrome_driver):
     #calls webdriver adds a couple of arguments and points webdriver to a website
     options = webdriver.ChromeOptions()
+    ua = UserAgent()
+    userAgent = ua.random
     options.add_experimental_option("detach", True)
     options.add_argument("--incognito")
+    options.add_argument(f'user-agent={userAgent}')
     browser = webdriver.Chrome(chrome_options=options, executable_path=chrome_driver)
     browser.get('https://www.instagram.com')
     
@@ -156,7 +160,7 @@ def relog_launch(ig_post, igusern, igpw, fbun, fbpw, chrome_driver = chrome_driv
     launch = browser.find_element(By.XPATH, "//button[@analyticsid='agentLaunchBtn']")
     time.sleep(2)
     launch.click()
-    browser.close()
+    browser.quit()
     #return the session cookie that we grabbed
     return session
 
