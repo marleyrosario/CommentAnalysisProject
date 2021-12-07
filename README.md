@@ -10,3 +10,8 @@ Use python packages insta-scrape (built on Selenium and for pandas) and facebook
 Use a natural language processing model to find the most frequently used terms that get classified in a list as important political issues to find out what the most talked about issues are for each party. 
 
 Use a natural language language processing model to perform a sentiment analysis of a random sample of comments from accounts who are either business or verified to attempt to define how party activists and groups feel about a particular issue.
+
+
+Here is the link to the master comments - https://drive.google.com/file/d/1qoFjdlIiwWPMd3Dsh8aCQnu1CwKE2I0f/view?usp=sharing
+
+On Start_NLP if you can't scrape the IG comments because you don't have enough warm instagram accounts or fb accounts then you can use this file and turn the comments into a nested list segmented by the profileURL to replicate the analysis and tables I made.
