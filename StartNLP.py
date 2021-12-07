@@ -29,9 +29,9 @@ def open_csvs(fname, path):
 def create_list_of_dfs():
     fname = "csv"
     list_of_fnames = []
-    for i in range(1,2):
+    for i in range(10,56):
         list_of_fnames.append(fname + f" ({i})")
-    list_of_fnames.append(fname)    
+    #list_of_fnames.append(fname)    
     list_of_fnames = [fname + ".csv" for fname in list_of_fnames]
     list_of_dfs = [open_csvs(fname, path = path) for fname in list_of_fnames]
     return list_of_dfs
@@ -42,11 +42,23 @@ def clean_list_of_dfs(list_of_dfs):
     dfs_not_scrapable = []
     for df in list_of_dfs:
         if 'comment' not in df.columns:
-            dfs_not_scrapable.append(df)        
-    list_of_dfs = [x for x in list_of_dfs if x not in dfs_not_scrapable]
+            dfs_not_scrapable.append(df)   
+    del list_of_dfs[31]
+    del list_of_dfs[20]
     return list_of_dfs, dfs_not_scrapable
 
-list_of_dfs, dfs_not_scrapable = clean_list_of_dfs(list_of_dfs)
+def add_posts_and_id(list_of_dfs):
+    list_of_dfs, dfs_not_scrapable = clean_list_of_dfs(list_of_dfs)
+    path = r"C:\Users\marle\Documents\GitHub\CommentAnalysisProject"
+    fname = "poststoscrape.csv"
+    scraped_posts = open_csvs(fname = fname, path =path)
+    list_of_dfs = [df.rename(columns = {'query':'postUrl'}) for df in list_of_dfs]
+    list_of_dfs = [df.merge(scraped_posts, on = 'postUrl') for df in list_of_dfs]
+    return list_of_dfs
+
+list_of_dfs = add_posts_and_id(list_of_dfs)
+master_comments = pd.concat(list_of_dfs)
+master_comments.to_csv(r"C:\Users\marle\Documents\GitHub\CommentAnalysisProject\master_comments.csv")
 
 def start_nlp_processing(list_of_dfs):
     list_of_dfs = [df.to_dict() for df in list_of_dfs]
