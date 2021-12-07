@@ -5,6 +5,15 @@ Created on Sat Dec  4 17:35:09 2021
 @author: marle
 """
 import pandas as pd
+import webbrowser
+from selenium import webdriver
+import time
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+import re
+import requests
+
 politicians = pd.read_csv('C:/Users/marle/Documents/Github/CommentAnalysisProject/total_list.csv')
 chrome_driver = '/users/marle/Downloads/chromedriver_win32 (1)/chromedriver'
 path = r"C:\Users\marle\Downloads"
@@ -14,11 +23,6 @@ def get_posts(url, agent_id):
     password_2 = 'Imtoogood1'
     us = '7737241991'
     pw = 'Imtoogood1!'
-    from selenium import webdriver
-    import time
-    from selenium.webdriver.common.keys import Keys
-    from selenium.webdriver.common.by import By
-    from selenium.webdriver.chrome.options import Options
     options = webdriver.ChromeOptions()
     options.add_experimental_option("detach", True)
     options.add_argument("--incognito")
@@ -89,8 +93,6 @@ def get_posts(url, agent_id):
     launch = browser_3.find_element(By.XPATH, "//button[@analyticsid='agentLaunchBtn']")
     time.sleep(2)
     launch.click()
-    import re
-    import requests
     time.sleep(15)
     #Variables set to create an api call
     url = "https://api.phantombuster.com/api/v2/agents/fetch-output"
@@ -104,7 +106,6 @@ def get_posts(url, agent_id):
     ls = df["output"]
     #create a list grabbing the text that starts with https?://phantom (In an output of the phantom it is structured with 2 urls 1 being the csv file 2 being the json file) list index 0 will always be the csv unless the phantom was rate limited
     link = re.findall(r'(https?://phantom[^\s]+)', ls)
-    import webbrowser
     df = webbrowser.open(link[0]) 
     time.sleep(30)
     browser.close()

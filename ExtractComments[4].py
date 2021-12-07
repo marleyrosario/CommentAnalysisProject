@@ -14,27 +14,14 @@ Created on Fri Nov 26 15:42:05 2021
 
 import requests
 import pandas as pd
-import json
-import csv
-import os
-import glob
-import shutil
-import io
 import webbrowser
 import string as str
 import re
-import urllib
-import js2py
 from selenium import webdriver
 import time
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from oauth2client.service_account import ServiceAccountCredentials
-import gspread
-from google.oauth2 import service_account
-from google.cloud import bigquery
-from google.cloud import bigquery_storage
 import datetime
 from datetime import date
 import numpy as np
