@@ -12,6 +12,13 @@ variable and the name of the files in the list.
 """
 
 import pandas as pd
+import os 
+
+path = r"C:\Users\marle\Downloads"
+
+def open_csvs(fname, path):
+    df = pd.read_csv(os.path.join(path, fname))
+    return df
 
 def create_list_of_dfs():
     fname = "csv"
@@ -25,19 +32,12 @@ def create_list_of_dfs():
 
 list_of_dfs = create_list_of_dfs()
 
-path = r"C:\Users\marle\Downloads"
-
-def read_files(fname, path):
-    import os
-    csv = pd.read_csv(os.path.join(path, fname))
-    return csv
-
 def create_total_engagement_column(df):
     df['Total_Engagement'] = df['commentCount'] + df['likeCount']
     return df
 
-def build_csv(files, path):
-    dfs = [read_files(fname, path) for fname in files]
+def build_csv(list_of_dfs):
+    dfs = list_of_dfs
     dfs = [create_total_engagement_column(df) for df in dfs]
     dfs = [df.nlargest(5, 'Total_Engagement') for df in dfs]
     csv = pd.concat(dfs)
@@ -45,7 +45,7 @@ def build_csv(files, path):
     csv = csv[['postUrl', 'index', 'Total_Engagement', 'commentCount', 'query']]
     return csv
 
-csv = build_csv(files = files, path = path)
+csv = build_csv(list_of_dfs)
 csv.to_csv(r"C:\Users\marle\Documents\Github\CommentAnalysisProject\poststoscrape.csv")
     
 

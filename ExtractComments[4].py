@@ -170,17 +170,20 @@ def phantom_launch(agent_id):
     headers = {"Accept": "application/json","X-Phantombuster-Key-1": "d6wcAtnXbjU3f3akZYFgueSzLi1cDMKvDansjY5AsiA"}
     response = requests.request("POST", url, headers=headers)
     print(response.text)
-
-
-#Get the output of the phantom given a phantom id
-def get_output(agent_id, ig_post):
-#Variables set to create an api call
+    
+def phantom_call(agent_id):
     url = "https://api.phantombuster.com/api/v2/agents/fetch-output"
     querystring = {"id":'7447948318063011', "mode":"most-recent"}
     headers = {"Accept": "application/json", 'x-phantombuster-key': "d6wcAtnXbjU3f3akZYFgueSzLi1cDMKvDansjY5AsiA"}
     response = requests.request("GET", url, headers=headers, params=querystring)
     #turn response to json (dictionary in python)
     df = response.json()
+    return df
+     
+#Get the output of the phantom given a phantom id
+def get_output(agent_id, ig_post):
+#Variables set to create an api call
+    df = phantom_call('7447948318063011')
     #Grab the output value and create a string variable of all the text from the output of a phantom
     if df['isAgentRunning'] is False and df['progress'] >= .20:
         ls = df["output"]
@@ -193,18 +196,8 @@ def get_output(agent_id, ig_post):
         second_check = re.findall(r'(connect to Instagram with this session cookie[^\s]+)', ls)
         couldnt_access = re.findall(r"(Couldn't access input spreadsheet[^\s]+)", ls)
         column_name = re.findall(r"(Incorrect spreadsheet's column name[^\s]+)", ls)    
-        #if the length of the list is anything other than 0 than it has been rate limited
-        if len(check) != 0 or len(couldnt_access)!=0 or len(column_name) !=0 or len(second_check) !=0:
-            #If rate limited then we need to login to instagram and run the phantom in the same browser we logged into instagram
-            for i in range(len(instagram_logins)):
-                x = relog_launch("https://www.instagram.com/p/B7bHRPbgjWc/", igusern= instagram_logins['Usernames'][i], 
-                                 igpw= instagram_logins['Passwords'][i], 
-                                 fbun=instagram_logins['FB_Usernames'][i], 
-                                 fbpw= instagram_logins['FB_Passwords'][i])
-                time.sleep(60)
-                #check, link, i = get_output(agent_id)     
-        else:        
-            i = webbrowser.open(link[0])
+        #if the length of the list is anything other than 0 than it has been rate limited     
+        i = webbrowser.open(link[0])
     elif df['isAgentRunning'] is False and df['progress'] < .20:
         url = "https://api.phantombuster.com/api/v2/agents/fetch-output"
         querystring = {"id":'7447948318063011', "mode":"most-recent"}
@@ -234,13 +227,9 @@ def get_output(agent_id, ig_post):
                 #check, link, i = get_output(agent_id)     
         else:        
             i = webbrowser.open(link[0])
-    elif df['isAgentRunning'] is True and df['progress'] < .20:
-        time.sleep(120)
-        url = "https://api.phantombuster.com/api/v2/agents/fetch-output"
-        querystring = {"id":'7447948318063011', "mode":"most-recent"}
-        headers = {"Accept": "application/json", 'x-phantombuster-key': "d6wcAtnXbjU3f3akZYFgueSzLi1cDMKvDansjY5AsiA"}
-        response = requests.request("GET", url, headers=headers, params=querystring)
-    #turn response to json (dictionary in python)
+    elif df['isAgentRunning'] is True:
+        time.sleep(180)
+        df = phantom_call("7447948318063011")
         df = response.json()
         ls = df["output"]
         #create a list grabbing the text that starts with https?://phantom (In an output of the phantom it is structured with 2 urls 1 being the csv file 2 being the json file) list index 0 will always be the csv unless the phantom was rate limited
@@ -266,7 +255,7 @@ def get_output(agent_id, ig_post):
             i = webbrowser.open(link[0])
     else:
         ig_post = ig_post.replace("https://", " ")
-        webbrowser.open(f"https://cache1.phantombooster.com/BPykInzDawQ/QZGFPQiy8Nif3mjhFrRcZw/https%3A//{ig_post}.csv")
+        webbrowser.open(link[0])
                  
 
 def scrape_comments():
