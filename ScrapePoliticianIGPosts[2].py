@@ -110,10 +110,20 @@ def get_posts(url, agent_id):
     return df
 
 def start_scraping():
+   def create_list_of_dfs():
+        fname = "csv"
+        list_of_fnames = []
+        for i in range(1,2):
+            list_of_fnames.append(fname + f" ({i})")
+        list_of_fnames.append(fname)    
+        list_of_fnames = [fname + ".csv" for fname in list_of_fnames]
+        list_of_dfs = [open_csvs(fname, path = path) for fname in list_of_fnames]
+        return list_of_dfs
+    
+    list_of_dfs = create_list_of_dfs()
     question = input("Do you want to start scraping? - Y/N:")
     if "Y" in question:
-        #urls = politicians['URL'].tolist()
-        urls = []
+        urls = politicians['URL'].tolist()
         df = [get_posts(url, '6637118561671508') for url in urls]
     else:
         print("Alright. This script is done.")
