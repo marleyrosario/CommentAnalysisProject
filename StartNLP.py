@@ -25,7 +25,7 @@ def open_csvs(fname, path):
 def create_list_of_dfs():
     fname = "csv"
     list_of_fnames = []
-    for i in range(1,8):
+    for i in range(1,2):
         list_of_fnames.append(fname + f" ({i})")
     list_of_fnames.append(fname)    
     list_of_fnames = [fname + ".csv" for fname in list_of_fnames]
@@ -33,6 +33,7 @@ def create_list_of_dfs():
     return list_of_dfs
 
 list_of_dfs = create_list_of_dfs()
+
 def clean_list_of_dfs(list_of_dfs):
     dfs_not_scrapable = [list_of_dfs[3], list_of_dfs[7]]
     not_scrapable_posts = pd.concat(dfs_not_scrapable)    
@@ -40,7 +41,7 @@ def clean_list_of_dfs(list_of_dfs):
     list_of_dfs.pop(6)
     return list_of_dfs, dfs_not_scrapable
 
-list_of_dfs, dfs_not_scrapable = clean_list_of_dfs(list_of_dfs)
+#list_of_dfs, dfs_not_scrapable = clean_list_of_dfs(list_of_dfs)
 
 #def start_nlp_processing():
 list_of_dfs = [df.to_dict() for df in list_of_dfs]
@@ -56,14 +57,26 @@ tokens = [[list(doc) for doc in docs] for docs in comments]
 import itertools
 tokens = [list(itertools.chain.from_iterable(tokens)) for tokens in tokens]
 tokens = [[t for t in list_of_tokens if t.is_stop == False] for list_of_tokens in tokens]
-# tokens = [[t.set_extension('has_emoji', default = False, force = True) for t in list_of_tokens] for list_of_tokens in tokens]
-# tokens = [[t for t in list_of_tokens if t._.has_emoji==False] for list_of_tokens in tokens]
+tokens = [[t for t in list_of_tokens if t.is_punct == False] for list_of_tokens in tokens]
+tokens = [[t for t in list_of_tokens if t.like_num == False] for list_of_tokens in tokens]
+tokens = [[t for t in list_of_tokens if t._.is_emoji==False] for list_of_tokens in tokens]
+text = [[t.text for t in list_of_tokens] for list_of_tokens in tokens]
+def main(comment):
+    Concordance = { }
+    for word in comment:
+        if word in Concordance.keys():
+            freq = Concordance.get(word)
+            freq += 1
+            Concordance[word]= freq
+        else:
+            freq = 1
+            Concordance[word]= freq
+    return Concordance
+
+text = [main(comment) for comment in text]
 
 
 
-
-
-# query_urls = pd.concat(list_of_query_urls)
 
 # query_urls = query_urls.reset_index(drop=False)
 
