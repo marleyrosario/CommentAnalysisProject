@@ -15,3 +15,7 @@ Use a natural language language processing model to perform a sentiment analysis
 Here is the link to the master comments - https://drive.google.com/file/d/1qoFjdlIiwWPMd3Dsh8aCQnu1CwKE2I0f/view?usp=sharing
 
 On Start_NLP if you can't scrape the IG comments because you don't have enough warm instagram accounts or fb accounts then you can use this file and turn the comments into a nested list segmented by the profileURL to replicate the analysis and tables I made.
+
+Files are run in order of the number in the bracket until you get to Start_NLP. 
+
+HMU at marleyrosario@uchicago.edu for any explanation. 
