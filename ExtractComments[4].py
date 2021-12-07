@@ -267,7 +267,7 @@ def get_output(agent_id, ig_post):
     else:
         ig_post = ig_post.replace("https://", " ")
         webbrowser.open(f"https://cache1.phantombooster.com/BPykInzDawQ/QZGFPQiy8Nif3mjhFrRcZw/https%3A//{ig_post}.csv")
-        
+                 
 
 def scrape_comments():
     ig_posts = pd.read_csv(r"C:\Users\marle\Documents\Github\CommentAnalysisProject\poststoscrape.csv")
