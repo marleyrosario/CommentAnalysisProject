@@ -12,14 +12,18 @@ variable and the name of the files in the list.
 """
 
 import pandas as pd
-files = ['barackobama.csv', 
-         "aoc.csv",
-         "berniesanders.csv",
-         "joebiden.csv",
-         "kamalaharris.csv",
-         "mikepence.csv",
-         "arnold.csv",
-         "donaldtrump.csv"]
+
+def create_list_of_dfs():
+    fname = "csv"
+    list_of_fnames = []
+    for i in range(1,9):
+        list_of_fnames.append(fname + f" ({i})")
+    list_of_fnames.append(fname)    
+    list_of_fnames = [fname + ".csv" for fname in list_of_fnames]
+    list_of_dfs = [open_csvs(fname, path = path) for fname in list_of_fnames]
+    return list_of_dfs
+
+list_of_dfs = create_list_of_dfs()
 
 path = r"C:\Users\marle\Downloads"
 
@@ -38,7 +42,7 @@ def build_csv(files, path):
     dfs = [df.nlargest(5, 'Total_Engagement') for df in dfs]
     csv = pd.concat(dfs)
     csv = csv.reset_index(drop=False)
-    csv = csv[['postUrl', 'index', 'Total_Engagement', 'commentCount']]
+    csv = csv[['postUrl', 'index', 'Total_Engagement', 'commentCount', 'query']]
     return csv
 
 csv = build_csv(files = files, path = path)
