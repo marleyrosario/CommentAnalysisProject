@@ -32,10 +32,10 @@ current_date = datetime.datetime.now()
 chrome_driver = '/users/marle/Downloads/chromedriver_win32 (1)/chromedriver'
 
 def create_starter_logins():
-    starter_logins = {'Usernames' : ['bluejay948', 'cozy_jay13'],
-                    'Passwords' : ['Imtoogood1!', 'TestBestFest1!'],
-                    'FB_Usernames' : ['7737241991', 'Test'],
-                    'FB_Passwords' : ['Imtoogood1!', 'TestBestFest1!']}
+    starter_logins = {'Usernames' : ['....', '....'],
+                    'Passwords' : ['....', '....'],
+                    'FB_Usernames' : ['.....', '....'],
+                    'FB_Passwords' : ['.....', '......']}
     instagram_logins = starter_logins
     instagram_logins = pd.DataFrame(instagram_logins)  
     return instagram_logins
@@ -95,11 +95,11 @@ def relog_launch(ig_post, igusern, igpw, fbun, fbpw, chrome_driver = chrome_driv
     browser.find_element(By.XPATH, "//button[contains(.,'Not Now')]").click() ### figure out why this isnt working 
     session = browser.session_id
     #log into phantom buster
-    username_3 = 'jacob@mainstreet.one'
-    password_3 = 'Mainstreetone!'
+    username_3 = 'email'
+    password_3 = 'password'
     browser.execute_script("window.open('');")
     browser.switch_to.window(browser.window_handles[1])
-    browser.get("https://phantombuster.com/5743805120683034/phantoms/7447948318063011/setup/step/connect-to-instagram?returnTo=%2F5743805120683034%2Fphantoms")    
+    browser.get("create scrape Instagram Phantom on PB WebApp and then put the connect to Instagram link here")    
     time.sleep(1)
     elem = browser.find_element(By.XPATH, "//input[@type='email']" )
     elem_2 = browser.find_element(By.XPATH, "//input[@type='password']")
@@ -142,7 +142,7 @@ def relog_launch(ig_post, igusern, igpw, fbun, fbpw, chrome_driver = chrome_driv
     elem_11.click()
     time.sleep(3)
     #go to the agent console url and launch phantom
-    browser.get('https://phantombuster.com/5743805120683034/phantoms/7447948318063011/console')
+    browser.get('phantom console for comments')
     time.sleep(2)
     launch = browser.find_element(By.XPATH, "//button[@analyticsid='agentLaunchBtn']")
     time.sleep(2)
@@ -170,7 +170,7 @@ def phantom_call(agent_id):
 #Get the output of the phantom given a phantom id
 def get_output(agent_id, ig_post):
 #Variables set to create an api call
-    df = phantom_call('7447948318063011')
+    df = phantom_call(f'{agent_id}')
     #Grab the output value and create a string variable of all the text from the output of a phantom
     if df['isAgentRunning'] is False and df['progress'] >= .20:
         ls = df["output"]
@@ -187,7 +187,7 @@ def get_output(agent_id, ig_post):
         i = webbrowser.open(link[0])
     elif df['isAgentRunning'] is False and df['progress'] < .20:
         url = "https://api.phantombuster.com/api/v2/agents/fetch-output"
-        querystring = {"id":'7447948318063011', "mode":"most-recent"}
+        querystring = {"id":f'{agent_id}', "mode":"most-recent"}
         headers = {"Accept": "application/json", 'x-phantombuster-key': "d6wcAtnXbjU3f3akZYFgueSzLi1cDMKvDansjY5AsiA"}
         response = requests.request("GET", url, headers=headers, params=querystring)
     #turn response to json (dictionary in python)
@@ -206,7 +206,7 @@ def get_output(agent_id, ig_post):
         if len(check) != 0 or len(couldnt_access)!=0 or len(column_name) !=0 or len(second_check) !=0:
             #If rate limited then we need to login to instagram and run the phantom in the same browser we logged into instagram
             for i in range(len(instagram_logins)):
-                x = relog_launch("https://www.instagram.com/p/B7bHRPbgjWc/", igusern= instagram_logins['Usernames'][i], 
+                x = relog_launch(ig_post, igusern= instagram_logins['Usernames'][i], 
                                  igpw= instagram_logins['Passwords'][i], 
                                  fbun=instagram_logins['FB_Usernames'][i], 
                                  fbpw= instagram_logins['FB_Passwords'][i])
@@ -216,7 +216,7 @@ def get_output(agent_id, ig_post):
             i = webbrowser.open(link[0])
     elif df['isAgentRunning'] is True:
         time.sleep(180)
-        df = phantom_call("7447948318063011")
+        df = phantom_call(f"{agent_id}")
         df = response.json()
         ls = df["output"]
         #create a list grabbing the text that starts with https?://phantom (In an output of the phantom it is structured with 2 urls 1 being the csv file 2 being the json file) list index 0 will always be the csv unless the phantom was rate limited
@@ -245,11 +245,11 @@ def get_output(agent_id, ig_post):
         webbrowser.open(link[0])
                  
 
-def scrape_comments():
+def scrape_comments(agent_id):
     ig_posts = pd.read_csv(r"C:\Users\marle\Documents\Github\CommentAnalysisProject\poststoscrape.csv")
     ig_posts = ig_posts['URL'].tolist()
     for ig_post in ig_posts:
-        get_output('7447948318063011', ig_post)
+        get_output(f'{agent_id}', ig_post)
 
 scrape_comments()
 

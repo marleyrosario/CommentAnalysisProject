@@ -34,10 +34,10 @@ def find_list_of_politicians(party):
     return names_of_politicians
 
 def relog_into_instagram():
-    username_2 = 'bluejay948'
-    password_2 = 'Imtoogood1'
-    us = '7737241991'
-    pw = 'Imtoogood1!'
+    username_2 = 'username'
+    password_2 = 'password'
+    us = 'fb username'
+    pw = 'fb password!'
     options = webdriver.ChromeOptions()
     ua = UserAgent()
     userAgent = ua.random

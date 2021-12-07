@@ -96,7 +96,7 @@ def main(comment):
 
 def send_analysis_to_dict(text):
     text = [main(comment) for comment in text]
-    list_of_political_topics = ['immigration', 'election', 'econ']
+    list_of_political_topics = ['immigration', 'election', 'economy']
     text = [{k:v for k,v in comment.items() if k in list_of_political_topics} for comment in text]
     vis = [pd.DataFrame(comment, index=[0]) for comment in text]
     vis = [comment.T for comment in vis]

@@ -19,10 +19,10 @@ chrome_driver = '/users/marle/Downloads/chromedriver_win32 (1)/chromedriver'
 path = r"C:\Users\marle\Downloads"
 
 def get_posts(url, agent_id):
-    username_2 = 'bluejay948'
-    password_2 = 'Imtoogood1'
-    us = '7737241991'
-    pw = 'Imtoogood1!'
+    username_2 = 'username'
+    password_2 = 'password'
+    us = 'fb username'
+    pw = 'fb password'
     options = webdriver.ChromeOptions()
     options.add_experimental_option("detach", True)
     options.add_argument("--incognito")
@@ -44,10 +44,10 @@ def get_posts(url, agent_id):
     time.sleep(30)
     time.sleep(2.5)
     browser.find_element(By.XPATH, "//button[contains(.,'Not Now')]").click()
-    phantom_username = 'jacob@mainstreet.one'
-    phantom_password = 'Mainstreetone!'
+    phantom_username = 'email'
+    phantom_password = 'password'
     browser_3 = webdriver.Chrome(chrome_options=options, executable_path = chrome_driver)
-    browser_3.get("https://phantombuster.com/5743805120683034/phantoms/6637118561671508/setup/step/connect-to-instagram?returnTo=%2F5743805120683034%2Fphantoms")
+    browser_3.get("Set up a profile scrape phantom and put the link to connect the instagram here")
     time.sleep(1)
     elem = browser_3.find_element(By.XPATH, "//input[@type='email']" )
     elem_2 = browser_3.find_element(By.XPATH, "//input[@type='password']")
@@ -88,7 +88,7 @@ def get_posts(url, agent_id):
     elem_11.click()
     time.sleep(3)
     #go to the agent console url and launch phantom
-    browser_3.get('https://phantombuster.com/5743805120683034/phantoms/6637118561671508/console')
+    browser_3.get('Set up a IG Post phantom and put that link here')
     time.sleep(2)
     launch = browser_3.find_element(By.XPATH, "//button[@analyticsid='agentLaunchBtn']")
     time.sleep(2)
@@ -111,11 +111,11 @@ def get_posts(url, agent_id):
     browser.close()
     return df
 
-def start_scraping():    
+def start_scraping(agent_id):    
    question = input("Do you want to start scraping? - Y/N:")
    if "Y" in question:
         urls = politicians['URL'].tolist()
-        df = [get_posts(url, '6637118561671508') for url in urls]
+        df = [get_posts(url, f'{agent_id}') for url in urls]
    else:
         print("Alright. This script is done.")
 
