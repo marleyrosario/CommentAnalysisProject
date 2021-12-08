@@ -12,6 +12,7 @@ Created on Fri Nov 26 15:42:05 2021
 @author: marle
 """
 
+from selenium.common.exceptions import NoSuchElementException
 import requests
 import pandas as pd
 import webbrowser
